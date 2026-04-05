@@ -17,7 +17,6 @@ from functools import wraps
 from src.crawler import WebCrawler
 from src.settings_manager import SettingsManager
 from src.auth_db import init_db, create_user, authenticate_user, get_user_by_id, log_guest_crawl, get_guest_crawls_last_24h, verify_user, set_user_tier, create_verification_token, verify_token, get_user_by_email
-from src.email_service import send_verification_email, send_welcome_email
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
@@ -462,15 +461,6 @@ def verify_email():
     # Verify the token
     success, message, app_source, user_email = verify_token(token)
 
-    # Send welcome email if successful
-    if success and user_email:
-        try:
-            user = get_user_by_email(user_email)
-            if user:
-                send_welcome_email(user_email, user['username'], app_source or 'main')
-        except Exception as e:
-            print(f"Error sending welcome email: {e}")
-
     # Determine redirect URL based on app_source
     redirect_url = None
     if success:
@@ -484,67 +474,6 @@ def verify_email():
                          message=message,
                          app_source=app_source or 'main',
                          redirect_url=redirect_url)
-
-@app.route('/api/register', methods=['POST'])
-def register():
-    # Check if registration is disabled
-    if DISABLE_REGISTER:
-        return jsonify({'success': False, 'message': 'Registration is currently disabled'})
-
-    data = request.get_json()
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
-
-    success, message, user_id = create_user(username, email, password)
-
-    # In local mode, auto-verify and set to admin tier
-    if success and LOCAL_MODE:
-        try:
-            from src.auth_db import verify_user, set_user_tier
-            # Get the user that was just created
-            import sqlite3
-            conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'users.db'))
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
-            user = cursor.fetchone()
-            conn.close()
-
-            if user:
-                verify_user(user['id'])
-                set_user_tier(user['id'], 'admin')
-                message = 'Account created and verified! You have admin access in local mode.'
-        except Exception as e:
-            print(f"Error during local mode auto-verification: {e}")
-            # Don't fail the registration, just log the error
-            # The account is still created successfully
-    elif success:
-        # Not in local mode - send verification email
-        is_resend = (message == 'resend')
-        try:
-            # Create verification token
-            token = create_verification_token(user_id, app_source='main')
-            if token:
-                # Send verification email
-                email_success, email_message = send_verification_email(
-                    email, username, token, app_source='main', is_resend=is_resend
-                )
-                if email_success:
-                    if is_resend:
-                        message = 'A verification email was already sent to this address. We\'ve updated your account details and sent a new verification link.'
-                    else:
-                        message = 'Registration successful! Please check your email to verify your account.'
-                else:
-                    message = 'Account created, but we could not send the verification email. Please contact support.'
-                    print(f"Email error: {email_message}")
-            else:
-                message = 'Account created, but verification token generation failed. Please contact support.'
-        except Exception as e:
-            print(f"Error sending verification email: {e}")
-            message = 'Account created, but we could not send the verification email. Please contact support.'
-
-    return jsonify({'success': success, 'message': message})
 
 @app.route('/api/login', methods=['POST'])
 def login():
