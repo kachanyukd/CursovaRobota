@@ -314,7 +314,7 @@ def generate_json_export(urls, fields):
 
 def generate_xml_export(urls, fields):
     """Generate XML export content"""
-    root = ET.Element('librecrawl_export')
+    root = ET.Element('crawl_export_')
     root.set('export_date', time.strftime('%Y-%m-%d %H:%M:%S'))
     root.set('total_urls', str(len(urls)))
 
@@ -1240,15 +1240,15 @@ def export_data():
             if export_format == 'csv':
                 regular_content = generate_csv_export(urls, regular_fields)
                 regular_mimetype = 'text/csv'
-                regular_filename = f'librecrawl_export_{int(time.time())}.csv'
+                regular_filename = f'crawl_export_{int(time.time())}.csv'
             elif export_format == 'json':
                 regular_content = generate_json_export(urls, regular_fields)
                 regular_mimetype = 'application/json'
-                regular_filename = f'librecrawl_export_{int(time.time())}.json'
+                regular_filename = f'crawl_export_{int(time.time())}.json'
             elif export_format == 'xml':
                 regular_content = generate_xml_export(urls, regular_fields)
                 regular_mimetype = 'application/xml'
-                regular_filename = f'librecrawl_export_{int(time.time())}.xml'
+                regular_filename = f'crawl_export_{int(time.time())}.xml'
             else:
                 return jsonify({'success': False, 'error': 'Unsupported export format'})
 
