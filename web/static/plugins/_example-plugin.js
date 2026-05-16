@@ -1,12 +1,12 @@
 /**
- * Example Plugin Template for LibreCrawl
+ * Example Plugin Template for SEOCrawler
  * Copy this file and customize it to create your own plugin!
  *
  * This file starts with _ so it won't be loaded automatically.
  * To use it: rename to something like 'my-plugin.js' and add it to the plugin loader.
  */
 
-LibreCrawlPlugin.register({
+SEOCrawlerPlugin.register({
     // ==========================================
     // REQUIRED CONFIGURATION
     // ==========================================

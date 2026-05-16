@@ -9,7 +9,7 @@ let defaultSettings = {
     crawlExternalLinks: false,
 
     // Request settings
-    userAgent: 'LibreCrawl/1.0 (Web Crawler)',
+    userAgent: 'SEOCrawler/1.0 (Web Crawler)',
     timeout: 10,
     retries: 3,
     acceptLanguage: 'en-US,en;q=0.9',
@@ -49,7 +49,7 @@ let defaultSettings = {
     jsTimeout: 30,
     jsBrowser: 'chromium',
     jsHeadless: true,
-    jsUserAgent: 'LibreCrawl/1.0 (Web Crawler with JavaScript)',
+    jsUserAgent: 'SEOCrawler/1.0 (Web Crawler with JavaScript)',
     jsViewportWidth: 1920,
     jsViewportHeight: 1080,
     jsMaxConcurrentPages: 3,
@@ -500,7 +500,7 @@ function saveSettings() {
 
     // Save to localStorage first (primary storage for persistence)
     try {
-        localStorage.setItem('librecrawl_settings', JSON.stringify(newSettings));
+        localStorage.setItem('seocrawler_settings', JSON.stringify(newSettings));
         console.log('Settings saved to localStorage');
     } catch (error) {
         console.error('Failed to save to localStorage:', error);
@@ -547,7 +547,7 @@ function resetSettings() {
 
         // Clear localStorage
         try {
-            localStorage.removeItem('librecrawl_settings');
+            localStorage.removeItem('seocrawler_settings');
             console.log('Settings cleared from localStorage');
         } catch (error) {
             console.error('Failed to clear localStorage:', error);
@@ -658,7 +658,7 @@ function validateSettings(settings) {
 function loadSettings() {
     // Try to load from localStorage first (browser-specific persistence)
     try {
-        const savedSettings = localStorage.getItem('librecrawl_settings');
+        const savedSettings = localStorage.getItem('seocrawler_settings');
         if (savedSettings) {
             const parsed = JSON.parse(savedSettings);
             currentSettings = { ...defaultSettings, ...parsed };
@@ -682,7 +682,7 @@ function loadSettings() {
             if (data.success) {
                 currentSettings = { ...defaultSettings, ...data.settings };
                 // Save to localStorage for future loads
-                localStorage.setItem('librecrawl_settings', JSON.stringify(currentSettings));
+                localStorage.setItem('seocrawler_settings', JSON.stringify(currentSettings));
                 // Apply custom CSS after loading settings
                 applyCustomCSS();
             } else {
@@ -741,7 +741,7 @@ function exportSettings() {
     const url = URL.createObjectURL(settingsBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'librecrawl-settings.json';
+    a.download = 'seocrawler-settings.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

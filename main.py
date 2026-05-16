@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Parse command line arguments
-parser = argparse.ArgumentParser(description='Crawler - SEO Spider Tool')
+parser = argparse.ArgumentParser(description='SEO Crawler Tool')
 parser.add_argument('--local', '-l', action='store_true',
                     help='Run in local mode (all users get admin tier, no rate limits)')
 parser.add_argument('--disable-register', '-dr', action='store_true',
@@ -40,7 +40,7 @@ DISABLE_GUEST = args.disable_guest or os.getenv('DISABLE_GUEST', '').lower() in 
 DEMO_MODE = args.demo or os.getenv('DEMO_MODE', '').lower() in ('true', '1', 'yes')
 
 app = Flask(__name__, template_folder='web/templates', static_folder='web/static')
-app.secret_key = 'librecrawl-secret-key-change-in-production'  # TODO: Use environment variable in production
+app.secret_key = 'seocrawler-secret-key-change-in-production'  # TODO: Use environment variable in production
 
 # Enable compression for all responses
 Compress(app)
@@ -465,7 +465,7 @@ def verify_email():
     redirect_url = None
     if success:
         if app_source == 'workshop':
-            redirect_url = os.getenv('WORKSHOP_APP_URL', 'https://workshop.librecrawl.com')
+            redirect_url = os.getenv('WORKSHOP_APP_URL', 'https://workshop.seocrawler.local')
         else:
             redirect_url = url_for('login_page')
 
@@ -1198,15 +1198,15 @@ def export_data():
             if export_format == 'csv':
                 issues_content = generate_issues_csv_export(issues)
                 issues_mimetype = 'text/csv'
-                issues_filename = f'librecrawl_issues_{int(time.time())}.csv'
+                issues_filename = f'seocrawler_issues_{int(time.time())}.csv'
             elif export_format == 'json':
                 issues_content = generate_issues_json_export(issues)
                 issues_mimetype = 'application/json'
-                issues_filename = f'librecrawl_issues_{int(time.time())}.json'
+                issues_filename = f'seocrawler_issues_{int(time.time())}.json'
             else:
                 issues_content = generate_issues_csv_export(issues)
                 issues_mimetype = 'text/csv'
-                issues_filename = f'librecrawl_issues_{int(time.time())}.csv'
+                issues_filename = f'seocrawler_issues_{int(time.time())}.csv'
 
             files_to_export.append({
                 'content': issues_content,
@@ -1219,15 +1219,15 @@ def export_data():
             if export_format == 'csv':
                 links_content = generate_links_csv_export(links)
                 links_mimetype = 'text/csv'
-                links_filename = f'librecrawl_links_{int(time.time())}.csv'
+                links_filename = f'seocrawler_links_{int(time.time())}.csv'
             elif export_format == 'json':
                 links_content = generate_links_json_export(links)
                 links_mimetype = 'application/json'
-                links_filename = f'librecrawl_links_{int(time.time())}.json'
+                links_filename = f'seocrawler_links_{int(time.time())}.json'
             else:
                 links_content = generate_links_csv_export(links)
                 links_mimetype = 'text/csv'
-                links_filename = f'librecrawl_links_{int(time.time())}.csv'
+                links_filename = f'seocrawler_links_{int(time.time())}.csv'
 
             files_to_export.append({
                 'content': links_content,
@@ -1350,7 +1350,7 @@ def main():
     start_cleanup_thread()
 
     print("=" * 60)
-    print("Crawler - SEO Spider")
+    print("SEO Crawler")
     print("=" * 60)
     print(f"\n🚀 Server starting on http://0.0.0.0:5000")
     print(f"🌐 Access from browser: http://localhost:5000")

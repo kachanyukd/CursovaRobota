@@ -1,5 +1,5 @@
 /**
- * LibreCrawl Plugin Loader
+ * SEOCrawler Plugin Loader
  * Automatically discovers and loads plugins from /static/plugins/
  */
 
@@ -77,7 +77,7 @@ class PluginLoader {
     }
 
     /**
-     * Register a plugin (called by plugin files via LibreCrawlPlugin.register())
+     * Register a plugin (called by plugin files via SEOCrawlerPlugin.register())
      */
     registerPlugin(pluginConfig) {
         // Validate required fields
@@ -368,7 +368,7 @@ class PluginLoader {
 }
 
 // Global plugin API
-window.LibreCrawlPlugin = {
+window.SEOCrawlerPlugin = {
     loader: new PluginLoader(),
 
     /**

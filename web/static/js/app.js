@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 async function initializeApp() {
     // Load plugins first (before tabs are initialized)
-    if (window.LibreCrawlPlugin && window.LibreCrawlPlugin.loader) {
-        await window.LibreCrawlPlugin.loader.loadAllPlugins();
-        window.LibreCrawlPlugin.loader.initializePlugins();
+    if (window.SEOCrawlerPlugin && window.SEOCrawlerPlugin.loader) {
+        await window.SEOCrawlerPlugin.loader.loadAllPlugins();
+        window.SEOCrawlerPlugin.loader.initializePlugins();
     }
 
     // Setup event listeners
@@ -317,8 +317,8 @@ function clearCrawlData() {
     }
 
     // Notify plugins of data clear (send empty data)
-    if (window.LibreCrawlPlugin && window.LibreCrawlPlugin.loader) {
-        window.LibreCrawlPlugin.loader.notifyDataUpdate({
+    if (window.SEOCrawlerPlugin && window.SEOCrawlerPlugin.loader) {
+        window.SEOCrawlerPlugin.loader.notifyDataUpdate({
             urls: [],
             links: [],
             issues: [],
@@ -428,8 +428,8 @@ function pollCrawlProgress() {
                     loadVisualizationData();
                 }
                 // Notify plugins that crawl is complete
-                if (window.LibreCrawlPlugin && window.LibreCrawlPlugin.loader) {
-                    window.LibreCrawlPlugin.loader.notifyCrawlComplete({
+                if (window.SEOCrawlerPlugin && window.SEOCrawlerPlugin.loader) {
+                    window.SEOCrawlerPlugin.loader.notifyCrawlComplete({
                         urls: crawlState.urls,
                         links: crawlState.links,
                         issues: crawlState.issues,
@@ -504,8 +504,8 @@ function updateCrawlData(data) {
     }
 
     // Notify plugins of data update
-    if (window.LibreCrawlPlugin && window.LibreCrawlPlugin.loader) {
-        window.LibreCrawlPlugin.loader.notifyDataUpdate({
+    if (window.SEOCrawlerPlugin && window.SEOCrawlerPlugin.loader) {
+        window.SEOCrawlerPlugin.loader.notifyDataUpdate({
             urls: crawlState.urls,
             links: crawlState.links,
             issues: crawlState.issues,
@@ -1083,11 +1083,11 @@ function switchTab(tabName) {
 
 // Handle plugin tab activation
 function handlePluginTabSwitch(tabName) {
-    if (!window.LibreCrawlPlugin || !window.LibreCrawlPlugin.loader) {
+    if (!window.SEOCrawlerPlugin || !window.SEOCrawlerPlugin.loader) {
         return;
     }
 
-    const loader = window.LibreCrawlPlugin.loader;
+    const loader = window.SEOCrawlerPlugin.loader;
 
     // Deactivate previously active plugin
     if (loader.activePluginId && loader.activePluginId !== tabName) {
@@ -1943,7 +1943,7 @@ async function saveCrawl() {
         // Generate filename with domain and timestamp
         const domain = crawlState.baseUrl ? new URL(crawlState.baseUrl).hostname : 'crawl';
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        a.download = `librecrawl_${domain}_${timestamp}.json`;
+        a.download = `seocrawler_${domain}_${timestamp}.json`;
 
         document.body.appendChild(a);
         a.click();
@@ -2105,8 +2105,8 @@ function loadCrawl() {
             }
 
             // Notify plugins of loaded data
-            if (window.LibreCrawlPlugin && window.LibreCrawlPlugin.loader) {
-                window.LibreCrawlPlugin.loader.notifyDataUpdate({
+            if (window.SEOCrawlerPlugin && window.SEOCrawlerPlugin.loader) {
+                window.SEOCrawlerPlugin.loader.notifyDataUpdate({
                     urls: crawlState.urls,
                     links: crawlState.links,
                     issues: crawlState.issues,
